@@ -13,16 +13,15 @@ class Command(BaseCommand):
 
     def run_simulation(self):
         barrier = threading.Barrier(2)
+        vessel = Vessel.objects.get(id=1)
 
         def user1():
             barrier.wait()
-            vessel = Vessel.objects.get(id=1)
             vessel.content -= 10.0
             vessel.save()
 
         def user2():
             barrier.wait()
-            vessel = Vessel.objects.get(id=1)
             vessel.content -= 10.0
             vessel.save()
 
@@ -32,6 +31,5 @@ class Command(BaseCommand):
         t2.start()
         t1.join()
         t2.join()
-
-        vessel = Vessel.objects.get(id=1)
+        
         self.stdout.write(f"Remaining content: {vessel.content} kg")
